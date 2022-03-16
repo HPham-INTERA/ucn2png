@@ -1,0 +1,11 @@
+﻿id,var,name,path2files,outfile_csv,Notes
+1,sce,200PT,,,Name of ECF
+2,var,Nitrate,,,"List of COCs, must separated by a comma"
+3,ucn_file,c:\Users\hpham\OneDrive - INTERA Inc\projects\037_Checking_ECF-200W-21-0031\org_files\ECF-200W-21-0031ReviewFiles_rerun_using_Win\Transport2012\Nitrate\P2R_83_Nitrate.UCN,,,
+4,conc_cutoff,1.00E-20,,,Blank cells with concentration values less than the cutoff value
+5,contour_levels,"0,45,450,900",,,"Separate values by a comma, not space. "
+6,color_levels,"#D2E3EE,#79B8E3,#42799D",,,"Can recognize python color names such as red or HEX such as #63b8ff. A list of both types also works. Only use comma between colors, no space."
+7,list_sp,"1, 10, 20, 30,40,48",,,1 is the first stress period (not 0)
+8,list_layer,"1,2,3,4,999",,,put number 999 for max plume
+9,ucn2png,yes,,,yes or no. Must be all in lowercase.
+10,ucn2shp,no,,,yes or no. Enable this option may take long script run time.
