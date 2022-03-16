@@ -22,7 +22,9 @@ CLONE THIS REPO (Copy this repo to your local PC)
    git clone https://github.com/HPham-INTERA/ucn2png.git   
    
 RUN SCRIPT
-   go to folder ucn2png
-   run this command:
-   python main.py input/input.csv
+   - Prepare input file in input/input.csv. Remember to modify path to UCN file. 
+   - open program "Anaconda Prompt (Anaconda3)"
+   - activate flopy conda env: conda activate flopy
+   - go to folder ucn2png
+   - run this command: python main.py input/input.csv
 
