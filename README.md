@@ -15,7 +15,7 @@ INSTALLATION Python Environment using Anaconda
 4. Or you can install a new conda env using flopy.yml included in this repo:
    conda env create -f flopy.yml
    
-CLONE THIS REPO (Copy this repo to your local PC)
+CLONE THIS REPO:
    git clone https://github.com/HPham-INTERA/ucn2png.git   
    
 RUN SCRIPT
