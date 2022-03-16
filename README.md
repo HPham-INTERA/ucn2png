@@ -3,7 +3,7 @@ Convert MODFLOW MT3D UCN file to png and shapefile using flopy and GeoPandas by 
 Last updated: 03/15/2022
 
 INSTALLATION Python Environment using Anaconda
-1. Install Anaconda Individual Edition https://repo.anaconda.com/archive/Anaconda3-2021.11-Windows-x86_64.exe
+1. Download Anaconda Individual Edition https://repo.anaconda.com/archive/Anaconda3-2021.11-Windows-x86_64.exe
 2. Install Anaconda to your Windows PC
 3. Setup a new conda environment
 - Open Anaconda Prompt (Anaconda3)
@@ -22,9 +22,9 @@ CLONE THIS REPO (Copy this repo to your local PC)
    git clone https://github.com/HPham-INTERA/ucn2png.git   
    
 RUN SCRIPT
-   - Prepare input file in input/input.csv. Remember to modify path to UCN file. 
-   - open program "Anaconda Prompt (Anaconda3)"
-   - activate flopy conda env: conda activate flopy
-   - go to folder ucn2png
-   - run this command: python main.py input/input.csv
+   - Prepare input file in input/input.csv. Remember to modify path to UCN file and basemap files. 
+   - Ppen program "Anaconda Prompt (Anaconda3)"
+   - Activate flopy conda env: conda activate flopy
+   - Go to folder ucn2png
+   - Run this command: python main.py input/input.csv
 
