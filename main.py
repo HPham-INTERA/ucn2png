@@ -48,7 +48,7 @@ def read_ucn(ifile_ucn):
     return data, ntimes, nlay, nr, nc, times, ucnobj
 
 
-def generate_map1(arr, ofile, ptitle, levels, colors, map_type):
+def generate_map1(arr, ofile, ptitle, levels, colors, xy):
     '''
         - Generate 2D plume maps
         - Last updated on 3/15/2022 by hpham
@@ -78,7 +78,7 @@ def generate_map1(arr, ofile, ptitle, levels, colors, map_type):
                    edgecolor='none', zorder=1, legend=True, label='Basalt Above Water Table')
 
     # Plot 3 - GWIA
-    show_gwia = True
+    show_gwia = False
     if show_gwia:
         ifile_zone = f'input/shp_files/GWIA_2017.shp'
         # ifile_zone = f'input/GIS/hss/test_domain.shp'
@@ -88,15 +88,24 @@ def generate_map1(arr, ofile, ptitle, levels, colors, map_type):
         # zones.apply(lambda x: ax.annotate(s=x.GWIA_NAME,
         #                                  xy=x.geometry.centroid.coords[0], ha='center'), axis=1)
     # Plot 4 - Inner_and_Outer_Boundary
-    show_Inner_and_Outer_Boundary = True
+    show_Inner_and_Outer_Boundary = False
     if show_Inner_and_Outer_Boundary:
         ifile_zone = f'input/shp_files/Inner_and_Outer_Boundary.shp'
-        # ifile_zone = f'input/GIS/hss/test_domain.shp'
+        zones = gpd.read_file(ifile_zone)
+        # zones.plot(ax=ax, alpha=0.25, linewidth=0.5, color='none',
+        #           edgecolor='#636363', zorder=1, legend=True, label='Waste Site')  # darkred
+
+    # Plot 5 - show former operational areas (e.g. 200W, 200E, etc.)
+    show_OU = True
+    if show_OU:
+        ifile_zone = f'input/shp_files/bdjurdsv.shp'
         zones = gpd.read_file(ifile_zone)
         zones.plot(ax=ax, alpha=0.25, linewidth=0.5, color='none',
                    edgecolor='#636363', zorder=1, legend=True, label='Waste Site')  # darkred
+        zones.apply(lambda x: ax.annotate(s=x.NAME,
+                                          xy=x.geometry.centroid.coords[0], ha='center'), axis=1)
 
-    # Plot 5 - show River
+    # Plot 6 - show River
     show_river = True
     if show_river:
         ifile_zone = f'input/shp_files/River.shp'
@@ -104,7 +113,7 @@ def generate_map1(arr, ofile, ptitle, levels, colors, map_type):
         # print(zones.head())
         zones.plot(ax=ax, alpha=0.3, linewidth=0.75, color='#2b8cbe',
                    edgecolor='#2b8cbe', zorder=2, legend=True, label='River')
-    # Plot
+    # Plot 7
     show_mcali_zone = False
     if show_mcali_zone:
         ifile_zone = f'input/shp_files/P2Rv831_focus_calibration_area.shp'
@@ -113,7 +122,7 @@ def generate_map1(arr, ofile, ptitle, levels, colors, map_type):
         zones.plot(ax=ax, alpha=0.75, linewidth=1.25, color='none',
                    edgecolor='blue', zorder=2, legend=True, label='Focused_MCali_Zone')
 
-    # Plot 6 - show AWLN
+    # Plot 8 - show AWLN
     show_AWLN = False
     if show_AWLN:
         ifile_zone = f'input/shp_files/AWLN.shp'
@@ -123,7 +132,7 @@ def generate_map1(arr, ofile, ptitle, levels, colors, map_type):
                    edgecolor='#3182bd', zorder=3, legend=True, label='AWLN')
         zones.apply(lambda x: ax.annotate(s=x.Name,
                                           xy=x.geometry.centroid.coords[0], ha='center'), axis=1)
-    # Plot 7 - Show CA Compliance boundary
+    # Plot 9 - Show CA Compliance boundary
     show_CA_Boundary = False
     if show_CA_Boundary:
         ifile = f'input/shp_files/CompositeAnalysis_1998.shp'
@@ -141,12 +150,9 @@ def generate_map1(arr, ofile, ptitle, levels, colors, map_type):
     ax.set_title(ptitle)
     ax.set_xlim([dx.X.min(), dx.X.max()])
     ax.set_ylim([dy.Y.min(), dy.Y.max()])
-    if map_type == 'plume':
-        ax.set_xlim([560000, 590000])  # plume maps
-        ax.set_ylim([120000, 150000])  # plume maps
-    elif map_type == 'hss':
-        ax.set_xlim([562500, 580000])  # hss maps
-        ax.set_ylim([130000, 140000])  # hss maps
+    #
+    ax.set_xlim([xy[0], xy[1]])  # xmin, xmax
+    ax.set_ylim([xy[2], xy[3]])  # ymin, ymax 
 
     # plt.gca().set_aspect('equal', adjustable='box')
     fig.savefig(ofile, dpi=300, transparent=False, bbox_inches='tight')
@@ -222,6 +228,8 @@ if __name__ == "__main__":
 
     list_layer = re.split(',', dfin['name'].loc['list_layer'])
     list_layer = conv_str2num(list_layer)
+    map_dim = re.split(',', dfin['name'].loc['map_dim'])
+    map_dim = conv_str2num(map_dim)
 
     ucn2png = dfin['name'].loc['ucn2png']
     ucn2shp = dfin['name'].loc['ucn2shp']
@@ -233,25 +241,9 @@ if __name__ == "__main__":
             + for a given layers and stress periods, or 
             + for maximum plume footprint (max over all model layers)
         '''
-        # [1] Save to shp file format -----------------------------------------
-        # ofile = os.path.join(work_dir2, 'scripts',
-        #                     'output', 'shp', f'{run_sce}_avg_{var}.shp')
-        # arr2shp(work_dir2, arr, ofile)
-        # print(f'Saved {ofile}\n')
 
         # Create some output folders to write outputs
         create_output_folders()
-
-        # Specify output file name
-        ilay = 2
-        isp = 1
-
-        # Specify plot parameters
-
-        # colors = ['#63b8ff', '#bfefff', '#bab36a',
-        #          '#ffff00', '#f8b186', '#f70fe8']  # hss
-        map_type = 'plume'
-        # levels = [1e2, 1e3, 1e4, 1e5, 1e6, 1e9, 1e10, 1e11]
 
         # Read ucn file using flopy -------------------------------------------
         data, ntimes, nlay, nr, nc, times, ucnobj = read_ucn(ucn_file)
@@ -286,5 +278,5 @@ if __name__ == "__main__":
 
                 # Map array arr -----------------------------------------------
                 generate_map1(arr, ofile_png, ptitle, contour_levels,
-                              colors, map_type)
+                              colors, map_dim)
                 print(f'Saved {ofile_png}\n')
