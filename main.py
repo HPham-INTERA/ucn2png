@@ -102,8 +102,8 @@ def generate_map1(arr, ofile, ptitle, levels, colors, xy):
         zones = gpd.read_file(ifile_zone)
         zones.plot(ax=ax, alpha=0.25, linewidth=0.5, color='none',
                    edgecolor='#636363', zorder=1, legend=True, label='Waste Site')  # darkred
-        zones.apply(lambda x: ax.annotate(s=x.NAME,
-                                          xy=x.geometry.centroid.coords[0], ha='center'), axis=1)
+        # zones.apply(lambda x: ax.annotate(s=x.NAME,
+        #                                  xy=x.geometry.centroid.coords[0], ha='center'), axis=1)
 
     # Plot 6 - show River
     show_river = True
@@ -152,7 +152,7 @@ def generate_map1(arr, ofile, ptitle, levels, colors, xy):
     ax.set_ylim([dy.Y.min(), dy.Y.max()])
     #
     ax.set_xlim([xy[0], xy[1]])  # xmin, xmax
-    ax.set_ylim([xy[2], xy[3]])  # ymin, ymax 
+    ax.set_ylim([xy[2], xy[3]])  # ymin, ymax
 
     # plt.gca().set_aspect('equal', adjustable='box')
     fig.savefig(ofile, dpi=300, transparent=False, bbox_inches='tight')
